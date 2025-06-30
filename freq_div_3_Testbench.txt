@@ -1,0 +1,14 @@
+module freq_div_test;
+  
+  reg clk = 1'b0;
+  wire clk_mod;
+  
+  always #10 clk <= ~clk;
+  
+  f_div_3 UUT(clk,clk_mod);
+  
+  initial begin
+  $monitor("clk : %0d  mod_clk : %0d",clk,clk_mod);
+  end
+  
+endmodule

@@ -1,0 +1,59 @@
+module f_div_3(
+  	input clk,
+  	output clk_mod//,
+ // output [1:0] cnt_test,
+  
+);
+  
+ 
+  reg [1:0] cnt;   //counter state
+  
+  //wire [1:0] cnt_test = cnt;
+  
+  wire w1 = cnt[1] & cnt[0]; //internal reset
+  wire mux_out;
+  wire con;
+     
+  assign mux_out = con ? con : w1;
+ 
+  fsm_controller FSM1(clk,con);
+  
+  always@(posedge clk or posedge mux_out)
+    begin
+      if(mux_out)
+        cnt <= 2'b00;
+      else
+        cnt <= cnt + 1'b1;
+    end
+  
+  assign clk_mod = cnt[1];
+  
+endmodule
+    
+
+    module fsm_controller
+      (
+      input clk,
+      output reg mux_con
+      );
+      
+      reg state;
+      
+      always@(posedge clk)
+        begin
+          case(state)
+            
+            1'b0: begin
+              		mux_con <= 1'b1;
+              		state <= 1'b1;
+            	  end
+            1'b1: begin
+              		mux_con <= 1'b0;
+              		state <= 1'b1;			//hold this state
+            	  end
+            default: state <= 1'b0;
+              
+          endcase
+        end
+      
+    endmodule
